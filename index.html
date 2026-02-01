@@ -2,21 +2,26 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tanaj Pro v9</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tanaj Pro v9.1</title>
     <style>
         /* --- ESTILOS BASE --- */
-        body {
+        html, body {
             background-color: #0c0e12; color: #e0e0e0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0; display: flex; flex-direction: column;
-            height: 100vh; overflow: hidden;
+            margin: 0; padding: 0; 
+            /* CORRECCIÓN DE PANTALLA COMPLETA MOVIL */
+            height: 100%; 
+            height: 100dvh; /* Medida dinámica para móviles */
+            overflow: hidden;
+            display: flex; flex-direction: column;
         }
 
         header {
             background-color: #1a1c23; padding: 12px; text-align: center;
             border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center;
             flex-shrink: 0; z-index: 10;
+            padding-top: env(safe-area-inset-top); /* Respetar el 'Notch' del iPhone */
         }
         h1 { margin: 0; font-size: 1.1rem; color: #FFD700; flex-grow: 1; letter-spacing: 1px; }
         .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #FFD700; padding: 5px 10px; }
@@ -24,8 +29,9 @@
         /* --- MODAL FILTRO --- */
         #filter-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; overflow-y: auto; padding: 20px;
+            background: rgba(0,0,0,0.95); z-index: 2000; overflow-y: auto; padding: 20px;
             box-sizing: border-box;
+            padding-bottom: 100px; /* Espacio extra abajo */
         }
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: sticky; top: 0; background: rgba(0,0,0,0.95); padding: 10px 0; border-bottom: 1px solid #333; }
         .filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 10px; }
@@ -35,7 +41,10 @@
         .action-chip { background: #333; color: #fff; border: 1px solid #555; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
 
         /* --- LAYOUT --- */
-        #main-container { display: flex; flex: 1; overflow: hidden; flex-direction: column; }
+        #main-container { 
+            display: flex; flex: 1; overflow: hidden; flex-direction: column; 
+            position: relative;
+        }
         #keyboard-area { background-color: #1a1c23; padding: 10px; border-bottom: 1px solid #333; flex-shrink: 0; }
         #search-box {
             width: 96%; padding: 12px; font-size: 24px; font-weight: bold;
@@ -44,7 +53,7 @@
             font-family: 'Times New Roman', serif;
         }
 
-        /* --- BOTONES DE MODO DE VISTA (RECUPERADOS) --- */
+        /* --- BOTONES DE VISTA --- */
         #view-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
         .mode-btn {
             background: none; border: 1px solid #444; color: #666;
@@ -64,7 +73,15 @@
         .btn-space { width: 140px; }
 
         /* --- RESULTADOS --- */
-        #content { flex: 1; padding: 10px; overflow-y: auto; background-color: #0c0e12; -webkit-overflow-scrolling: touch; }
+        #content { 
+            flex: 1; padding: 10px; 
+            overflow-y: auto; 
+            background-color: #0c0e12; 
+            -webkit-overflow-scrolling: touch; 
+            /* EL COLCHÓN DE SEGURIDAD PARA MÓVILES */
+            padding-bottom: 80px; 
+        }
+        
         #stats-wrapper { margin-bottom: 15px; background-color: #1c1c1c; border-radius: 12px; border: 1px solid #333; padding: 12px; display: none; flex-direction: column; }
         #stats-panel { display: flex; justify-content: space-around; }
         .stat-box { text-align: center; }
@@ -93,7 +110,7 @@
         .pasuk-num { color: #FFF; font-weight: bold; font-size: 1.2rem; margin-left: 10px; }
         .highlight { color: #FFD700; font-weight: 900; text-shadow: 0 0 12px rgba(255, 215, 0, 0.5); background: rgba(255,215,0,0.05); }
 
-        #load-more-btn { background-color: #222; color: white; border: 1px solid #444; padding: 15px; width: 100%; border-radius: 8px; margin: 20px 0; cursor: pointer; display: none; font-weight: bold; }
+        #load-more-btn { background-color: #222; color: white; border: 1px solid #444; padding: 20px; width: 100%; border-radius: 8px; margin: 20px 0; cursor: pointer; display: none; font-weight: bold; margin-bottom: 50px; }
         #loading-screen { position: fixed; top:0; left:0; width:100%; height:100%; background: #0c0e12; z-index: 10000; display: flex; flex-direction: column; justify-content: center; align-items: center; color: #FFD700; }
 
         @media (min-width: 800px) {
@@ -197,7 +214,7 @@
     let database = [];
     let uniqueBooks = [];
     let selectedBooks = new Set();
-    let currentMode = "std"; // std = Standard, maso = Masoretico
+    let currentMode = "std";
     
     // 👇👇👇 PEGA TU TEXTO AQUI 👇👇👇
     const TEXTO_BIBLIA = `
@@ -2177,7 +2194,6 @@ $לו
 
 `; 
 
-    // --- FILTROS ---
     function openFilter() { document.getElementById('filter-modal').style.display = 'block'; }
     function closeFilter() { document.getElementById('filter-modal').style.display = 'none'; buscar(); }
     function selectAllBooks(state) {
@@ -2210,7 +2226,6 @@ $לו
         });
     }
 
-    // --- MODO DE VISTA ---
     function setMode(mode) {
         currentMode = mode;
         document.getElementById('btn-std').className = mode === 'std' ? 'mode-btn active' : 'mode-btn';
@@ -2223,7 +2238,6 @@ $לו
         l.style.display=(l.style.display==="none"||l.style.display==="")?"flex":"none";
     }
 
-    // --- TECLADO ---
     function typeKey(c){ document.getElementById('search-box').value+=c; buscar(); }
     function backspace(){ document.getElementById('search-box').value=document.getElementById('search-box').value.slice(0,-1); buscar(); }
     function limpiar(){ document.getElementById('search-box').value=""; document.getElementById('results-area').innerHTML=""; document.getElementById('stats-wrapper').style.display="none"; document.getElementById('load-more-btn').style.display="none"; document.getElementById('variants-list').style.display="none"; }
@@ -2246,7 +2260,6 @@ $לו
         let booksSet = new Set();
         const lineas = txt.split('\n');
         let l="-", p="-", k="0";
-        // IMPORTANTE: Variables para guardar Petuja/Setuma actuales
         let currentPet = "0"; 
         let currentSet = "0";
 
@@ -2255,9 +2268,7 @@ $לו
             
             if(linea.startsWith("#")) { 
                 l=linea.replace("#","").trim(); 
-                booksSet.add(l); 
-                p="-"; 
-                // Al cambiar libro, reseteamos contadores
+                booksSet.add(l); p="-"; 
                 currentPet="0"; currentSet="0";
                 continue; 
             }
@@ -2270,24 +2281,10 @@ $לו
             for(let frag of fragmentos) {
                 frag = frag.trim(); if(!frag) continue;
                 let num = (frag.match(/^(\d+)/) || ["","?"])[1];
-                
-                // EXTRAER PETUJA/SETUMA DEL FRAGMENTO
-                let m_p = frag.match(/\{פ\s*(\d*)\}/); 
-                if(m_p && m_p[1]) currentPet = m_p[1]; // Si tiene numero, actualizamos el "Perek" masoretico
-                
-                let m_s = frag.match(/\{ס\s*(\d*)\}/);
-                if(m_s && m_s[1]) currentSet = m_s[1]; // Si tiene numero, actualizamos el "Pasuk" masoretico
-
+                let m_p = frag.match(/\{פ\s*(\d*)\}/); if(m_p && m_p[1]) currentPet = m_p[1];
+                let m_s = frag.match(/\{ס\s*(\d*)\}/); if(m_s && m_s[1]) currentSet = m_s[1];
                 let t = frag.replace(/\{.*?\}/g, "").replace(/^\d+/, "").trim();
-                
-                if(t) {
-                    database.push({
-                        l: l, p: p, k: k, num: num, 
-                        t: t,
-                        pet: currentPet, // Guardamos estado actual
-                        setu: currentSet // Guardamos estado actual
-                    });
-                }
+                if(t) database.push({l, p, k, num, t, pet: currentPet, setu: currentSet});
             }
         }
         uniqueBooks = Array.from(booksSet);
@@ -2331,7 +2328,6 @@ $לו
         }
 
         if(!doVariants) exactas = total;
-        
         document.getElementById('stat-total').innerText = total;
         document.getElementById('stat-exact').innerText = exactas;
         document.getElementById('stat-included').innerText = incluidas;
@@ -2349,8 +2345,7 @@ $לו
                 vList.innerHTML += `<div class="variant-chip">${k} <span class="variant-count">${v}</span></div>`;
             });
         } else {
-            vBtn.style.display = "none"; 
-            vList.style.display = "none";
+            vBtn.style.display = "none"; vList.style.display = "none";
         }
 
         if(total > 0) renderNextBatch(query);
@@ -2366,26 +2361,17 @@ $לו
         const loadMoreBtn = document.getElementById('load-more-btn');
         const endIndex = Math.min(currentRenderIndex + BATCH_SIZE, currentMatches.length);
         let html = "";
-        
         for (let i = currentRenderIndex; i < endIndex; i++) {
             const item = currentMatches[i];
             const highlighted = item.t.split(query).join(`<span class="highlight">${query}</span>`);
-            
             let meta = "";
-            
-            // --- AQUÍ ESTÁ LA LÓGICA DE VISUALIZACIÓN ---
             if (currentMode === 'std') {
-                // MODO ESTANDAR
                 meta = `📘 ${item.l}`;
                 if (item.p !== "-") meta += ` | ${item.p}`;
                 meta += ` | Perek ${item.k}`;
             } else {
-                // MODO MASORÉTICO
-                // Muestra Libro | Petujá X | Setumá Y
-                // Si Petujá es 0 (no ha empezado), mostramos "-"
                 meta = `📜 ${item.l} | {פ} ${item.pet} | {ס} ${item.setu}`;
             }
-
             html += `<div class="pasuk-card"><div class="meta-header"><span class="meta-text">${meta}</span></div><div class="pasuk-text"><span class="pasuk-num">${item.num}</span> ${highlighted}</div></div>`;
         }
         resDiv.insertAdjacentHTML('beforeend', html);
