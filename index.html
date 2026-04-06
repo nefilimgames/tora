@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Tanaj Pro v9.1</title>
+    <title>Tanaj Pro v12</title>
     <style>
         /* --- ESTILOS BASE --- */
         html, body {
             background-color: #0c0e12; color: #e0e0e0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0; 
-            /* CORRECCIÓN DE PANTALLA COMPLETA MOVIL */
-            height: 100%; 
-            height: 100dvh; /* Medida dinámica para móviles */
-            overflow: hidden;
-            display: flex; flex-direction: column;
+            margin: 0; padding: 0; height: 100%; height: 100dvh; overflow: hidden; display: flex; flex-direction: column;
         }
 
         header {
             background-color: #1a1c23; padding: 12px; text-align: center;
             border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center;
-            flex-shrink: 0; z-index: 10;
-            padding-top: env(safe-area-inset-top); /* Respetar el 'Notch' del iPhone */
+            flex-shrink: 0; z-index: 10; padding-top: env(safe-area-inset-top);
         }
         h1 { margin: 0; font-size: 1.1rem; color: #FFD700; flex-grow: 1; letter-spacing: 1px; }
         .icon-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #FFD700; padding: 5px 10px; }
@@ -30,8 +24,7 @@
         #filter-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 2000; overflow-y: auto; padding: 20px;
-            box-sizing: border-box;
-            padding-bottom: 100px; /* Espacio extra abajo */
+            box-sizing: border-box; padding-bottom: 100px;
         }
         .filter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: sticky; top: 0; background: rgba(0,0,0,0.95); padding: 10px 0; border-bottom: 1px solid #333; }
         .filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 10px; }
@@ -41,10 +34,7 @@
         .action-chip { background: #333; color: #fff; border: 1px solid #555; padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; }
 
         /* --- LAYOUT --- */
-        #main-container { 
-            display: flex; flex: 1; overflow: hidden; flex-direction: column; 
-            position: relative;
-        }
+        #main-container { display: flex; flex: 1; overflow: hidden; flex-direction: column; position: relative; }
         #keyboard-area { background-color: #1a1c23; padding: 10px; border-bottom: 1px solid #333; flex-shrink: 0; }
         #search-box {
             width: 96%; padding: 12px; font-size: 24px; font-weight: bold;
@@ -53,12 +43,8 @@
             font-family: 'Times New Roman', serif;
         }
 
-        /* --- BOTONES DE VISTA --- */
         #view-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 10px; }
-        .mode-btn {
-            background: none; border: 1px solid #444; color: #666;
-            padding: 4px 12px; border-radius: 15px; font-size: 12px; cursor: pointer;
-        }
+        .mode-btn { background: none; border: 1px solid #444; color: #666; padding: 4px 12px; border-radius: 15px; font-size: 12px; cursor: pointer; }
         .mode-btn.active { background: #333; color: #fff; border-color: #fff; }
 
         .keyboard-grid { display: flex; flex-direction: column; gap: 6px; max-width: 600px; margin: 0 auto; }
@@ -73,15 +59,7 @@
         .btn-space { width: 140px; }
 
         /* --- RESULTADOS --- */
-        #content { 
-            flex: 1; padding: 10px; 
-            overflow-y: auto; 
-            background-color: #0c0e12; 
-            -webkit-overflow-scrolling: touch; 
-            /* EL COLCHÓN DE SEGURIDAD PARA MÓVILES */
-            padding-bottom: 80px; 
-        }
-        
+        #content { flex: 1; padding: 10px; overflow-y: auto; background-color: #0c0e12; -webkit-overflow-scrolling: touch; padding-bottom: 80px; }
         #stats-wrapper { margin-bottom: 15px; background-color: #1c1c1c; border-radius: 12px; border: 1px solid #333; padding: 12px; display: none; flex-direction: column; }
         #stats-panel { display: flex; justify-content: space-around; }
         .stat-box { text-align: center; }
@@ -89,18 +67,10 @@
         .stat-label { font-size: 0.65rem; color: #888; text-transform: uppercase; }
 
         #variants-section { border-top: 1px solid #333; margin-top: 12px; padding-top: 10px; text-align: center; }
-        .toggle-btn-variants {
-            background: #252525; border: 1px solid #555; color: #FFD700;
-            padding: 8px 20px; border-radius: 20px; font-size: 0.9rem;
-            cursor: pointer; width: 100%; transition: background 0.2s;
-        }
+        .toggle-btn-variants { background: #252525; border: 1px solid #555; color: #FFD700; padding: 8px 20px; border-radius: 20px; font-size: 0.9rem; cursor: pointer; width: 100%; transition: background 0.2s; }
         .toggle-btn-variants:active { background: #333; }
         #variants-list { display: none; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 12px; max-height: 200px; overflow-y: auto; }
-        .variant-chip {
-            background-color: #333; color: #eee; padding: 5px 12px; border-radius: 15px;
-            font-size: 1rem; font-family: 'Times New Roman', serif; display: flex; align-items: center; gap: 8px;
-            border: 1px solid #444;
-        }
+        .variant-chip { background-color: #333; color: #eee; padding: 5px 12px; border-radius: 15px; font-size: 1rem; font-family: 'Times New Roman', serif; display: flex; align-items: center; gap: 8px; border: 1px solid #444; }
         .variant-count { background-color: #FFD700; color: #000; font-size: 0.75rem; font-weight: bold; padding: 2px 6px; border-radius: 10px; font-family: sans-serif; }
 
         .pasuk-card { background-color: #16181d; padding: 15px; margin-bottom: 12px; border-radius: 8px; border-right: 4px solid #333; border-bottom: 1px solid #222; }
@@ -121,7 +91,7 @@
 </head>
 <body>
 
-<div id="loading-screen"><h2>⏳</h2><p>Cargando Tanaj Pro...</p></div>
+<div id="loading-screen"><h2>⏳</h2><p>Construyendo bases de datos...</p></div>
 
 <div id="filter-modal">
     <div class="filter-header">
@@ -130,7 +100,6 @@
     </div>
     <div class="filter-actions">
         <div class="action-chip" onclick="selectAllBooks(true)">Seleccionar Todo</div>
-        <div class="action-chip" onclick="selectTorah()">Solo Torá</div>
         <div class="action-chip" onclick="selectAllBooks(false)">Limpiar</div>
     </div>
     <div class="filter-grid" id="filter-grid"></div>
@@ -211,7 +180,10 @@
 </div>
 
 <script>
-    let database = [];
+    // --- DOS BASES DE DATOS SEPARADAS ---
+    let databaseStd = [];  // Para Modo Libro/Perek/Pasuk
+    let databaseMaso = []; // Para Modo Petuja/Setuma (Texto puro)
+    
     let uniqueBooks = [];
     let selectedBooks = new Set();
     let currentMode = "std";
@@ -2192,28 +2164,24 @@ $לה
 $לו
  1 ויקחו עם הארץ את יהואחז בן יאשיהו וימליכהו תחת אביו בירושלם  2 בן שלוש ועשרים שנה יואחז במלכו ושלשה חדשים מלך בירושלם  3 ויסירהו מלך מצרים בירושלם ויענש את הארץ מאה ככר כסף וככר זהב  4 וימלך מלך מצרים את אליקים אחיו על יהודה וירושלם ויסב את שמו יהויקים ואת יואחז אחיו לקח נכו ויביאהו מצרימה  5 {פ137} בן עשרים וחמש שנה יהויקים במלכו ואחת עשרה שנה מלך בירושלם ויעש הרע בעיני יהוה אלהיו  6 עליו עלה נבוכדנאצר מלך בבל ויאסרהו בנחשתים להליכו בבלה  7 ומכלי בית יהוה הביא נבוכדנאצר לבבל ויתנם בהיכלו בבבל  8 ויתר דברי יהויקים ותעבתיו אשר עשה והנמצא עליו הנם כתובים על ספר מלכי ישראל ויהודה וימלך יהויכין בנו תחתיו  9 {פ138} בן שמונה שנים יהויכין במלכו ושלשה חדשים ועשרת ימים מלך בירושלם ויעש הרע בעיני יהוה  10 ולתשובת השנה שלח המלך נבוכדנאצר ויבאהו בבלה עם כלי חמדת בית יהוה וימלך את צדקיהו אחיו על יהודה וירושלם  11 {פ139} בן עשרים ואחת שנה צדקיהו במלכו ואחת עשרה שנה מלך בירושלם  12 ויעש הרע בעיני יהוה אלהיו לא נכנע מלפני ירמיהו הנביא מפי יהוה  13 וגם במלך נבוכדנאצר מרד אשר השביעו באלהים ויקש את ערפו ויאמץ את לבבו משוב אל יהוה אלהי ישראל  14 גם כל שרי הכהנים והעם הרבו למעול מעל ככל תעבות הגוים ויטמאו את בית יהוה אשר הקדיש בירושלם  15 וישלח יהוה אלהי אבותיהם עליהם ביד מלאכיו השכם ושלוח כי חמל על עמו ועל מעונו  16 ויהיו מלעבים במלאכי האלהים ובוזים דבריו ומתעתעים בנבאיו עד עלות חמת יהוה בעמו עד לאין מרפא  17 ויעל עליהם את מלך כשדיים ויהרג בחוריהם בחרב בבית מקדשם ולא חמל על בחור ובתולה זקן וישש הכל נתן בידו  18 {ס1} וכל כלי בית האלהים הגדלים והקטנים ואצרות בית יהוה ואצרות המלך ושריו הכל הביא בבל  19 וישרפו את בית האלהים וינתצו את חומת ירושלם וכל ארמנותיה שרפו באש וכל כלי מחמדיה להשחית  20 ויגל השארית מן החרב אל בבל ויהיו לו ולבניו לעבדים עד מלך מלכות פרס  21 למלאות דבר יהוה בפי ירמיהו עד רצתה הארץ את שבתותיה כל ימי השמה שבתה למלאות שבעים שנה  22 {ס2} ובשנת אחת לכורש מלך פרס לכלות דבר יהוה בפי ירמיהו העיר יהוה את רוח כורש מלך פרס ויעבר קול בכל מלכותו וגם במכתב לאמר  23 {ס3} כה אמר כורש  מלך פרס כל ממלכות הארץ נתן לי יהוה אלהי השמים והוא פקד עלי לבנות לו בית בירושלם אשר ביהודה מי בכם מכל עמו יהוה אלהיו עמו ויעל  
 
+
 `; 
 
     function openFilter() { document.getElementById('filter-modal').style.display = 'block'; }
     function closeFilter() { document.getElementById('filter-modal').style.display = 'none'; buscar(); }
+    
     function selectAllBooks(state) {
         selectedBooks.clear();
         if(state) uniqueBooks.forEach(b => selectedBooks.add(b));
         updateFilterUI();
     }
-    function selectTorah() {
-        const toraKeywords = ["bereshit", "shemot", "vayikra", "bamidbar", "devarim"];
-        selectedBooks.clear();
-        uniqueBooks.forEach(b => {
-            if(toraKeywords.some(kw => b.toLowerCase().includes(kw))) selectedBooks.add(b);
-        });
-        updateFilterUI();
-    }
+    
     function toggleBook(book, element) {
         if(selectedBooks.has(book)) selectedBooks.delete(book);
         else selectedBooks.add(book);
         element.classList.toggle('active');
     }
+    
     function updateFilterUI() {
         const grid = document.getElementById('filter-grid');
         grid.innerHTML = "";
@@ -2244,7 +2212,7 @@ $לו
 
     let currentMatches = [];
     let currentRenderIndex = 0;
-    const BATCH_SIZE = 80;
+    const BATCH_SIZE = 40; 
 
     window.onload = function() {
         if(TEXTO_BIBLIA.includes("PASTE_AQUI")){ document.getElementById('loading-screen').innerHTML="<h3 style='color:red'>⚠️ Falta texto</h3>"; return; }
@@ -2256,37 +2224,95 @@ $לו
     };
 
     function procesarTexto(txt) {
-        database = [];
+        databaseStd = [];
+        databaseMaso = [];
         let booksSet = new Set();
         const lineas = txt.split('\n');
-        let l="-", p="-", k="0";
-        let currentPet = "0"; 
-        let currentSet = "0";
+        
+        // Variables para MODO ESTANDAR
+        let l_std="-", p_std="-", k_std="0";
+        
+        // Variables para MODO MASORÉTICO
+        let l_maso="-", pet_maso="0", set_maso="0";
+        let textoAcomuladoMaso = "";
+
+        // Función interna para guardar el bloque masorético actual
+        function guardarBloqueMaso() {
+            let textoLimpio = textoAcomuladoMaso.trim();
+            // Esta expresión regular elimina CUALQUIER número suelto (los pesukim) que haya quedado en el texto
+            textoLimpio = textoLimpio.replace(/(^|\s)\d+(?=\s|$)/g, " ").trim();
+            // Limpia dobles espacios
+            textoLimpio = textoLimpio.replace(/\s+/g, " ");
+            
+            if (textoLimpio) {
+                databaseMaso.push({
+                    l: l_maso,
+                    pet: pet_maso,
+                    setu: set_maso,
+                    t: textoLimpio
+                });
+            }
+            textoAcomuladoMaso = ""; // Reiniciar acumulador
+        }
 
         for (let linea of lineas) {
             linea = linea.trim(); if(!linea) continue;
             
             if(linea.startsWith("#")) { 
-                l=linea.replace("#","").trim(); 
-                booksSet.add(l); p="-"; 
-                currentPet="0"; currentSet="0";
+                guardarBloqueMaso(); // Guardar bloque del libro anterior si existe
+                
+                let bookName = linea.replace("#","").trim();
+                booksSet.add(bookName); 
+                
+                // Setear STD
+                l_std = bookName; p_std = "-"; k_std = "0";
+                
+                // Setear MASO
+                l_maso = bookName; pet_maso = "0"; set_maso = "0";
                 continue; 
             }
-            if(linea.startsWith("*")) { p=linea.replace("*","").trim(); continue; }
-            if(linea.startsWith("$")) { k=linea.replace("$","").trim(); continue; }
+            if(linea.startsWith("*")) { p_std=linea.replace("*","").trim(); continue; }
+            if(linea.startsWith("$")) { k_std=linea.replace("$","").trim(); continue; }
             
+            // --- 1. LLENAR BASE DE DATOS ESTÁNDAR (Como antes) ---
             let lineaExpandida = linea.replace(/(^|\s)(\d+)\s/g, "$1|SPLIT|$2 ");
             let fragmentos = lineaExpandida.split("|SPLIT|");
             
             for(let frag of fragmentos) {
                 frag = frag.trim(); if(!frag) continue;
                 let num = (frag.match(/^(\d+)/) || ["","?"])[1];
-                let m_p = frag.match(/\{פ\s*(\d*)\}/); if(m_p && m_p[1]) currentPet = m_p[1];
-                let m_s = frag.match(/\{ס\s*(\d*)\}/); if(m_s && m_s[1]) currentSet = m_s[1];
-                let t = frag.replace(/\{.*?\}/g, "").replace(/^\d+/, "").trim();
-                if(t) database.push({l, p, k, num, t, pet: currentPet, setu: currentSet});
+                let t_std = frag.replace(/\{.*?\}/g, "").replace(/^\d+/, "").trim();
+                if(t_std) databaseStd.push({l: l_std, p: p_std, k: k_std, num: num, t: t_std});
+            }
+
+            // --- 2. LLENAR BASE DE DATOS MASORÉTICA (Independiente de los versículos) ---
+            // Le quitamos los números de versículos a la línea cruda de inmediato
+            let lineaSinNumeros = linea.replace(/(^|\s)\d+(?=\s|$)/g, " ");
+            
+            // Cortamos la línea por las etiquetas {פX} y {סY}
+            let tokens = lineaSinNumeros.split(/(\{.*?\})/);
+            
+            for(let tok of tokens) {
+                tok = tok.trim();
+                if(!tok) continue;
+
+                if (tok.startsWith("{פ")) {
+                    guardarBloqueMaso(); // Encontramos nueva Petuja, guardamos lo anterior
+                    let m = tok.match(/\{פ\s*(\d*)\}/);
+                    if (m && m[1]) pet_maso = m[1];
+                    set_maso = "0"; // Petuja reinicia el contador de Setumas
+                } else if (tok.startsWith("{ס")) {
+                    guardarBloqueMaso(); // Encontramos nueva Setuma, guardamos lo anterior
+                    let m = tok.match(/\{ס\s*(\d*)\}/);
+                    if (m && m[1]) set_maso = m[1];
+                } else {
+                    // Es puro texto (sin etiquetas), lo sumamos a la Petuja/Setuma actual
+                    textoAcomuladoMaso += " " + tok;
+                }
             }
         }
+        guardarBloqueMaso(); // Guardar el último pedazo al terminar el ciclo
+        
         uniqueBooks = Array.from(booksSet);
         updateFilterUI();
     }
@@ -2300,13 +2326,15 @@ $לו
 
         let total=0, exactas=0, incluidas=0;
         let vMap = {};
-        currentMatches = [];
-        currentRenderIndex = 0;
+        currentMatches = []; 
         resDiv.innerHTML = "";
 
         const doVariants = query.length >= 2;
+        
+        // MAGIA: Elegimos qué base de datos buscar según el botón seleccionado
+        const dbToSearch = currentMode === 'std' ? databaseStd : databaseMaso;
 
-        for (let item of database) {
+        for (let item of dbToSearch) {
             if (!selectedBooks.has(item.l)) continue; 
 
             if (item.t.includes(query)) {
@@ -2332,6 +2360,8 @@ $לו
         document.getElementById('stat-exact').innerText = exactas;
         document.getElementById('stat-included').innerText = incluidas;
         statsWrap.style.display = "block";
+
+        currentRenderIndex = 0;
 
         const vList = document.getElementById('variants-list');
         const vBtn = document.querySelector('.toggle-btn-variants');
@@ -2361,18 +2391,30 @@ $לו
         const loadMoreBtn = document.getElementById('load-more-btn');
         const endIndex = Math.min(currentRenderIndex + BATCH_SIZE, currentMatches.length);
         let html = "";
+        
         for (let i = currentRenderIndex; i < endIndex; i++) {
             const item = currentMatches[i];
-            const highlighted = item.t.split(query).join(`<span class="highlight">${query}</span>`);
             let meta = "";
+            let textHtml = "";
+
             if (currentMode === 'std') {
+                // MODO ESTÁNDAR
                 meta = `📘 ${item.l}`;
                 if (item.p !== "-") meta += ` | ${item.p}`;
                 meta += ` | Perek ${item.k}`;
+                
+                const highlighted = item.t.split(query).join(`<span class="highlight">${query}</span>`);
+                textHtml = `<span class="pasuk-num">${item.num}</span> ${highlighted}`;
             } else {
-                meta = `📜 ${item.l} | {פ} ${item.pet} | {ס} ${item.setu}`;
+                // MODO MASORÉTICO
+                meta = `📜 ${item.l}`;
+                if (item.pet !== "0") meta += ` | {פ} ${item.pet}`;
+                if (item.setu !== "0") meta += ` | {ס} ${item.setu}`;
+                
+                textHtml = item.t.split(query).join(`<span class="highlight">${query}</span>`);
             }
-            html += `<div class="pasuk-card"><div class="meta-header"><span class="meta-text">${meta}</span></div><div class="pasuk-text"><span class="pasuk-num">${item.num}</span> ${highlighted}</div></div>`;
+
+            html += `<div class="pasuk-card"><div class="meta-header"><span class="meta-text">${meta}</span></div><div class="pasuk-text">${textHtml}</div></div>`;
         }
         resDiv.insertAdjacentHTML('beforeend', html);
         currentRenderIndex = endIndex;
